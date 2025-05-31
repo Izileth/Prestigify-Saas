@@ -12,5 +12,6 @@ declare module 'next-auth' {
         image?: string;
         bio?: string;
         createdAt?: string;
+        conectStipeAccountId?:string
 }
 }

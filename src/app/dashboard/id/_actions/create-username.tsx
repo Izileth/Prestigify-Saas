@@ -2,6 +2,8 @@
 import {z} from 'zod'
 import { prisma } from '@/lib/prisma'
 import {auth} from '@/lib/auth'
+
+
 const createUsernameSchema = z.object({
     username: z.string().min(4, "O username precisa ter pelo menos 4 letras"),
 })
