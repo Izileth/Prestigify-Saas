@@ -18,7 +18,7 @@ export function StatCard({
   const renderIcon = () => {
     if (React.isValidElement(icon)) {
       return React.cloneElement(icon as React.ReactElement, {
-        className: "w-4 h-4 text-gray-600"
+        
       });
     }
     return icon;
