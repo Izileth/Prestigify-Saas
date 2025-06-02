@@ -122,8 +122,8 @@ export default async function Apoia({
               <div className="border border-gray-200 p-6">
                 <div className="text-center space-y-3">
                   <div className="w-8 h-px bg-gray-300 mx-auto" />
-                  <p className="text-xs uppercase tracking-wider text-gray-500">Secure Payment</p>
-                  <p className="text-xs text-gray-400">All transactions are encrypted and secure</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-500">Pagamento Seguro</p>
+                  <p className="text-xs text-gray-400">Todas as Transações São Criptografadas Para a Sua Segurança</p>
                 </div>
               </div>
             </section>
@@ -142,8 +142,8 @@ export default async function Apoia({
             </div>
 
             <div className="text-center md:text-right">
-              <p className="text-xs text-gray-400">© {new Date().getFullYear()} All rights reserved.</p>
-              <p className="text-xs text-gray-400 mt-1">Designed with precision and care.</p>
+              <p className="text-xs text-gray-400">© {new Date().getFullYear()} Todos os Direitos Reservados.</p>
+              <p className="text-xs text-gray-400 mt-1">Projetado com Prescisão e Cuidado.</p>
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ interface CardProfileProps {
 
 export function CardProfile({ user }: CardProfileProps) {
     return (
-        <div className="w-full  border border-gray-200 rounded-none p-6 mb-6">
+        <div className="w-full  border-l border-r border-gray-200 rounded-none p-6 mb-6">
         <div className="flex flex-col items-center text-center">
             <div className="mb-4">
             <Image 
@@ -27,7 +27,7 @@ export function CardProfile({ user }: CardProfileProps) {
             />
             </div>
             
-            <div className="w-full max-w-3xl">
+            <div className="w-full max-w-3xl ">
             <Name initialName={user.name || 'Digite seu Nome...'} />
             <Description initialDescription={user.bio || 'Digite sua Biografia...'} />
             </div>

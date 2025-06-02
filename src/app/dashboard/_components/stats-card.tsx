@@ -18,7 +18,6 @@ export function StatCard({
   const renderIcon = () => {
     if (React.isValidElement(icon)) {
       return React.cloneElement(icon as React.ReactElement, {
-        
       });
     }
     return icon;

@@ -43,9 +43,9 @@ export function Description({ initialDescription }: { initialDescription: string
 
     return (
         <div className="mt-4 w-full">
-        <label className="text-sm font-medium text-gray-600 mb-1 block">Biografia:</label>
+        <label className="text-sm font-normal text-left text-gray-600 mb-1.5 block">Biografia</label>
         <textarea 
-            className="w-full p-3 text-sm border border-gray-200 rounded-none bg-white resize-none min-h-[100px] focus:outline-none focus:border-gray-400"
+            className="w-full py-2 text-sm border-b border-b-zinc-300 rounded-none bg-white resize-none min-h-[100px] focus:outline-none focus:border-gray-400"
             value={description}
             onChange={handleChange}
         />

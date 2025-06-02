@@ -32,7 +32,7 @@ export function UrlPreview({ username: slug }: UrlPreviewProps) {
 
     if (!!username) {
         return (
-        <div className="w-full p-3 border border-gray-200 rounded-none mb-4">
+        <div className="w-full p-3 border-b border-gray-200 rounded-none mb-4">
             <div className="flex flex-row md:flex-row items-start md:items-center justify-between gap-3">
             <div className="flex-1">
                 <h3 className="text-sm font-medium text-gray-600 mb-1">Sua URL:</h3>

@@ -43,9 +43,9 @@ export function Name({ initialName }: { initialName: string }) {
 
     return (
         <div className="w-full">
-        <label className="text-sm font-medium text-gray-600 mb-1 block">Nome:</label>
+        <label className="text-sm font-normal text-left text-gray-600 mb-1.5 block">Nome</label>
         <input 
-            className="w-full p-3 text-base border border-gray-200 rounded-none bg-white focus:outline-none focus:border-gray-400"
+            className="w-full py-2 text-base border-b border-gray-200 rounded-none bg-white focus:outline-none focus:border-gray-400"
             value={name}
             onChange={handleChangeName}
         />

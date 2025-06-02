@@ -129,7 +129,7 @@ export function FormData({slug, creatorId}: FormDataProps ) {
                         >
                         <Input
                             placeholder="Digite seu nome"
-                            className="border-gray-200 focus:border-gray-400 rounded-xl h-12 bg-gray-50/50 transition-all duration-300"
+                            className="border-gray-200 focus:border-gray-400 rounded-none h-12 bg-gray-50/50 transition-all duration-300"
                             {...field}
                         />
                         </motion.div>
@@ -157,7 +157,7 @@ export function FormData({slug, creatorId}: FormDataProps ) {
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         >
                         <Textarea
-                            className="resize-none h-32 border-gray-200 focus:border-gray-400 rounded-xl bg-gray-50/50 transition-all duration-300"
+                            className="resize-none h-32 border-gray-200 focus:border-gray-400 rounded-none bg-gray-50/50 transition-all duration-300"
                             placeholder="Digite sua mensagem de apoio..."
                             {...field}
                         />
@@ -197,7 +197,7 @@ export function FormData({slug, creatorId}: FormDataProps ) {
                             >
                             <Label
                                 htmlFor={value}
-                                className={`flex items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                                className={`flex items-center justify-center p-4 rounded-none border-2 cursor-pointer transition-all duration-300 ${
                                 field.value === value
                                     ? "border-gray-900 bg-gray-900 text-white shadow-lg"
                                     : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
@@ -229,7 +229,7 @@ export function FormData({slug, creatorId}: FormDataProps ) {
                 <Button
                     disabled={form.formState.isSubmitting}
                     type="submit"
-                    className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium h-12 rounded-none shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                     {form.formState.isSubmitting ? (
                     <motion.div className="flex items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
