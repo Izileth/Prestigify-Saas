@@ -2,7 +2,7 @@
  
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import {  z } from "zod"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,10 @@ import {getStripeJs} from '@/lib/stripe-js'
 
 import { createPayment } from "../_actions/create-payment"
 import { toast } from "sonner"
+
+import {motion} from 'framer-motion'
+import { Heart, Loader2 } from "lucide-react"
+
 const formSchema = z.object({
     name: z.string().min(1, "O Nome é obigatorio"),
     message: z.string().min(1, "A mensagem é obigatoria"),
@@ -36,6 +40,22 @@ interface FormDataProps {
     slug: string;
     creatorId: string;
 }
+
+// Animation variants
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, ease: "easeOut" },
+}
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
 export function FormData({slug, creatorId}: FormDataProps ) {
 
     const form = useForm<FormData>({
@@ -46,8 +66,9 @@ export function FormData({slug, creatorId}: FormDataProps ) {
             price: "15",
         },
     })
- 
-  // 2. Define a submit handler.
+
+    const priceOptions = ["15", "25", "35", "40", "50"]
+
     async function onSubmit(data: FormData) {
 
         const priceInCents = Number(data.price) * 100;
@@ -60,86 +81,172 @@ export function FormData({slug, creatorId}: FormDataProps ) {
             creatorId: creatorId
         });
 
+        await handlePaymentReposnse(checkout)
+    }
+
+    async function handlePaymentReposnse(checkout: {sessionId?: string, error?: string}){
+        
         if(checkout.error){
             toast.error(checkout.error)
             return;
         }
 
-        if(checkout.data){
-            const data = JSON.parse(checkout.data)
-            
-            const stripe = await getStripeJs()
-
-            stripe?.redirectToCheckout({
-                sessionId: data.id as string
-            })
+        if(!checkout.sessionId){
+            toast.error("Falha ao criar o pagemento, Erro ao redirecionar para o checkout")
+            return;
         }
+
+
+            
+        const stripe = await getStripeJs()
+
+        if(!stripe){
+            toast.error("Falha ao criar o pagamento, Erro ao redirecionar para o checkout")
+            return;
+        }
+
+        stripe?.redirectToCheckout({
+            sessionId: checkout.sessionId 
+        })
     }
+
     return (
+        <motion.div variants={staggerContainer} initial="initial" animate="animate">
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mb-2 mt-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Name Field */}
+            <motion.div variants={fadeInUp}>
                 <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel className="text-gray-900 font-medium">Nome</FormLabel>
                     <FormControl>
-                        <Input placeholder="Digite seu nome" {...field} />
+                        <motion.div
+                        whileFocus={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        >
+                        <Input
+                            placeholder="Digite seu nome"
+                            className="border-gray-200 focus:border-gray-400 rounded-xl h-12 bg-gray-50/50 transition-all duration-300"
+                            {...field}
+                        />
+                        </motion.div>
                     </FormControl>
-                    <FormDescription>
-                        This is your public display name.
+                    <FormDescription className="text-gray-500 text-sm font-light">
+                        Seu nome será exibido junto com a doação
                     </FormDescription>
                     <FormMessage />
                     </FormItem>
                 )}
                 />
+            </motion.div>
+
+            {/* Message Field */}
+            <motion.div variants={fadeInUp}>
                 <FormField
                 control={form.control}
                 name="message"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Menssagem</FormLabel>
+                    <FormLabel className="text-gray-900 font-medium">Mensagem</FormLabel>
                     <FormControl>
-                        <Textarea className="resize-none h-32" placeholder="Digite sua mensagem" {...field} />
+                        <motion.div
+                        whileFocus={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        >
+                        <Textarea
+                            className="resize-none h-32 border-gray-200 focus:border-gray-400 rounded-xl bg-gray-50/50 transition-all duration-300"
+                            placeholder="Digite sua mensagem de apoio..."
+                            {...field}
+                        />
+                        </motion.div>
                     </FormControl>
-                    <FormDescription>
-                        This is your public display name.
+                    <FormDescription className="text-gray-500 text-sm font-light">
+                        Deixe uma mensagem carinhosa para o criador
                     </FormDescription>
                     <FormMessage />
                     </FormItem>
                 )}
                 />
-                  
-                  <FormField
+            </motion.div>
+
+            {/* Price Selection */}
+            <motion.div variants={fadeInUp}>
+                <FormField
                 control={form.control}
                 name="price"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Valor da Doação</FormLabel>
+                    <FormLabel className="text-gray-900 font-medium">Valor da Doação</FormLabel>
                     <FormControl>
-                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex items-center gap-2">
-                            {
-                                ["15", "25", "35", "40", "50"].map((value) => (
-                                    <div key={value} className="flex items-center gap-2">
-                                        <RadioGroupItem value={value} id={value} />
-                                        <Label className=" gap-2" htmlFor={`value-${value}`}>R$ {value}</Label>
-                                    </div>
-                                ))
-                            }
+                        <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4"
+                        >
+                        {priceOptions.map((value, index) => (
+                            <motion.div
+                            key={value}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.1, duration: 0.3 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            >
+                            <Label
+                                htmlFor={value}
+                                className={`flex items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                                field.value === value
+                                    ? "border-gray-900 bg-gray-900 text-white shadow-lg"
+                                    : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                                }`}
+                            >
+                                <RadioGroupItem value={value} id={value} className="sr-only" />
+                                <span className="font-medium">R$ {value}</span>
+                            </Label>
+                            </motion.div>
+                        ))}
                         </RadioGroup>
                     </FormControl>
-                    <FormDescription>
-                        This is your public display name.
+                    <FormDescription className="text-gray-500 text-sm font-light">
+                        Escolha o valor que deseja doar
                     </FormDescription>
                     <FormMessage />
                     </FormItem>
                 )}
                 />
-                <Button 
-                disabled={form.formState.isSubmitting}
-                type="submit">{form.formState.isSubmitting ? "Carregando..." : "Doar"}</Button>
+            </motion.div>
+
+            {/* Submit Button */}
+            <motion.div variants={fadeInUp} className="pt-4">
+                <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                <Button
+                    disabled={form.formState.isSubmitting}
+                    type="submit"
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                    {form.formState.isSubmitting ? (
+                    <motion.div className="flex items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processando...
+                    </motion.div>
+                    ) : (
+                    <motion.div className="flex items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Heart className="mr-2 h-4 w-4" />
+                        Doar com Amor
+                    </motion.div>
+                    )}
+                </Button>
+                </motion.div>
+            </motion.div>
             </form>
         </Form>
+        </motion.div>
     )
 }

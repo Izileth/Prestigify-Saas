@@ -7,75 +7,84 @@ import Link from "next/link";
 import { Link2 } from "lucide-react";
 
 interface UrlPreviewProps {
-    username: string | null,
-
+  username: string | null;
 }
-export function UrlPreview({username: slug}: UrlPreviewProps) {
-    const [error, seterror] = useState<null | string>(null)
 
-    const [username, setUsername] = useState(slug)
+export function UrlPreview({ username: slug }: UrlPreviewProps) {
+    const [error, setError] = useState<null | string>(null);
+    const [username, setUsername] = useState(slug);
 
     async function submitAction(formData: FormData) {
-        const username = formData.get('username') as string   
-        if(username =='') return
+        const username = formData.get('username') as string;
+        if (username == '') return;
 
-        const response = await createUsername({username: username})
-   
-        if( response.error){
-            seterror(response.error)
-            return
+        const response = await createUsername({ username });
+        
+        if (response.error) {
+        setError(response.error);
+        return;
         }
 
-        if(response.data){
-            setUsername(response.data)
+        if (response.data) {
+        setUsername(response.data);
         }
     }
 
-    if(!!username){
-        return(
-        <div className="w-full flex flex-col md:flex-row  justify-center p-2 text-zinc-500">
-            <div className="w-full flex flex-1 flex-row  p-0 m-0  items-center justify-between bg-zinc-500rounded-md smd:p-4 gap-2">
-                <div className="w-full gap-2 flex flex-col md:flex-row p-0 m-0  items-start md:items-center justify-start">
-                    <h3 className="font-semibold text-zinc-50">Sua Url:</h3>
-                    <Link 
-                        href={`/creator/${username}`} 
-                        target="_blank"
-                        className="w-fit text-sm md:text-md   h-9 rounded-md flex items-center font-medium text-white">
-                        {process.env.PUBLIC_HOST_URL || 'http://localhost:3000'}/creator/{username}
-                    </Link>   
-                </div> 
-                <Link
-                        href={`/creator/${username}`} 
-                        target="_blank"
-                        className="bg-zinc-50 text-zinc-950 px-4 py-1"
-                    >
-                        <Link2 className="h-5 w-5 text-zinc-950" />
-                    </Link> 
+    if (!!username) {
+        return (
+        <div className="w-full p-3 border border-gray-200 rounded-none mb-4">
+            <div className="flex flex-row md:flex-row items-start md:items-center justify-between gap-3">
+            <div className="flex-1">
+                <h3 className="text-sm font-medium text-gray-600 mb-1">Sua URL:</h3>
+                <div className="flex items-center gap-2">
+                <Link 
+                    href={`/creator/${username}`} 
+                    target="_blank"
+                    className="text-sm font-normal text-gray underline-offset-2 hover:underline truncate"
+                >
+                    {process.env.PUBLIC_HOST_URL || 'http://localhost:3000'}/creator/{username}
+                </Link>
+                </div>
+            </div>
+            <Link
+                href={`/creator/${username}`} 
+                target="_blank"
+                className="p-2 border border-gray-200 rounded-none hover:bg-gray-50"
+            >
+                <Link2 className="h-4 w-4 text-gray-600" />
+            </Link>
             </div>
         </div>
         );
     }
+        
     return (
-        <div className="w-full">
-            <div className="w-full flex items-center justify-center p-2 text-zinc-500">
-            <form action={submitAction} className="flex flex-1 flex-col">
-            <div className="w-full flex  flex-1 flex-col md:flex-row  items-center justify-between bg-zinc-500rounded-md p-4 gap-2">
-                <div className="w-full flex gap-2 flex-row items-center justify-between">
-                    <p className="w-fit h-9 rounded-md flex items-center font-semibold text-white">{process.env.PUBLIC_HOST_URL || 'http://localhost:3000'}/creator</p>
-                    <input className="w-full placeholder:text-zinc-950 px-2 placeholder:font-normal bg-zinc-50  h-9 rounded-md flex items-center font-semibold text-white" 
+        <div className="w-full border border-gray-200 rounded-none p-3 mb-4">
+        <form action={submitAction} className="space-y-3">
+            <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">Criar URL:</label>
+            <div className="flex flex-col md:flex-row gap-2">
+                <div className="flex-1 flex items-center bg-gray-50 border border-gray-200 p-1">
+                <span className="text-sm text-gray-600 px-2">
+                    {process.env.PUBLIC_HOST_URL || 'http://localhost:3000'}/creator/
+                </span>
+                <input
                     name="username"
-                    type="text" 
-                    placeholder="Insira o seu nome..." />
+                    type="text"
+                    placeholder="seu-nome"
+                    className="flex-1 text-sm bg-transparent outline-none px-2 py-1.5"
+                />
                 </div>
-            <Button type="submit"
-            className="bg-zinc-50 text-zinc-950 hover:bg-zinc-950 hover:text-zinc-50 w-full md:w-fit px-4 h-9 cursor-pointer rounded-md"
-            >
+                <Button 
+                type="submit"
+                className="w-full md:w-auto border border-gray-900 bg-white text-gray-900 hover:bg-gray-900 hover:text-white rounded-none"
+                >
                 Salvar
-            </Button>
+                </Button>
             </div>
+            </div>
+            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
         </form>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
-        </div>
-    )
+    );
 }

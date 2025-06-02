@@ -1,35 +1,61 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import React from "react";
 
 type StatCardProps = {
-    title: string;
-    description: string;
-    value: string | number;
-    icon: React.ReactNode;
-    iconClassName?: string;
+  title: string;
+  description: string;
+  value: string | number;
+  icon: React.ReactNode;
 };
 
 export function StatCard({
-    title,
-    description,
-    value,
-    icon,
-    //iconClassName = "",
-    }: StatCardProps) {
-    return (
-        <Card className="bg-gradient-to-br from-zinc-900 to-zinc-800 text-white shadow-lg border-0">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-            <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-            <CardDescription className="text-gray-200">{description}</CardDescription>
-            </div>
+  title,
+  description,
+  value,
+  icon,
+}: StatCardProps) {
+  // Helper function to safely add className to icon
+  const renderIcon = () => {
+    if (React.isValidElement(icon)) {
+      return React.cloneElement(icon as React.ReactElement, {
+        className: "w-4 h-4 text-gray-600"
+      });
+    }
+    return icon;
+  };
 
-            {icon}
-        </CardHeader>
-        <CardContent>
-            <p className="text-3xl font-bold select-none tracking-tight">
+  return (
+    <Card className="border border-gray-200 rounded-none bg-white shadow-none">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-base font-medium text-gray-800 tracking-tight">
+              {title}
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-500">
+              {description}
+            </CardDescription>
+          </div>
+          
+          <div className="bg-gray-100 p-2 rounded-full">
+            {renderIcon()}
+          </div>
+        </div>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-light text-gray-900">
             {value}
-            </p>
-        </CardContent>
-        </Card>
-    );
+          </span>
+        </div>
+        
+        <div className="mt-4 border-t border-gray-100 pt-3">
+          <span className="text-xs text-gray-500">
+            Atualizado recentemente
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

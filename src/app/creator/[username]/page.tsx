@@ -1,73 +1,153 @@
-import Image from "next/image";
-import { getInfoUser } from "./_data_acess/get-info-user";
-import { notFound } from "next/navigation";
-import { FormData } from "./_components/form";
+import Image from "next/image"
+import { getInfoUser } from "./_data_acess/get-info-user"
+import { notFound } from "next/navigation"
+import { FormData } from "./_components/form"
+import { Header } from "@/app/dashboard/_components/header"
 export default async function Apoia({
   params,
 }: {
   params: Promise<{ username: string }>
 }) {
-  const { username } = await params;
+  const { username } = await params
+  const user = await getInfoUser({ username })
 
-  const user = await getInfoUser({ username });
-
-
-  if(!user){
+  if (!user) {
     notFound()
   }
 
-  console.log(user);
-
   return (
-    <div className=" min-h-[calc(100vh-64px)]">
-      <div className="w-full h-64 relative bg-black">
-        <Image
-          src={user.image ?? "https://github.com/devfraga.png"}
-          alt="Banner"
-          fill
-          className="object-cover opacity-50"
-          priority
-          quality={100}
-        />
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div>
+        <Header />
       </div>
-
-      <section className="flex flex-col w-full items-center justify-center mx-auto max-w-7xl p-4 relative">
-        <div className="flex flex-col items-center">
+      <section className="relative">
+        <div className="w-full h-48 md:h-64 lg:h-80 relative bg-gradient-to-b from-gray-900 to-gray-800">
           <Image
-            src={user.image ??  "https://github.com/devfraga.png"}
-            className="w-36 h-36 rounded-xl bg-gray-50 hover:shadow-lg duration-300 select-none text-zinc-900 text-3xl flex items-center justify-center object-cover absolute -top-16 border-4 border-white"
-            alt="Matheus Fraga"
-            width={96}
-            height={96}
+            src={user.image ?? "https://github.com/devfraga.png"}
+            alt="Profile banner"
+            fill
+            className="object-cover opacity-20"
+            priority
             quality={100}
           />
-          <h1 className=" font-bold text-xl md:text-2xl mt-20 mb-4">
-            {user.name ?? 'Usuário'}
-          </h1>
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent" />
+        </div>
+
+        {/* Profile Image */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-12 md:-bottom-16">
+          <div className="relative">
+            <Image
+              src={user.image ?? "https://github.com/devfraga.png"}
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white object-cover border-4 border-white shadow-lg"
+              alt={user.name ?? "User profile"}
+              width={128}
+              height={128}
+              quality={100}
+            />
+            <div className="absolute inset-0 rounded-full border border-gray-200" />
+          </div>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full mx-auto gap-4 max-w-5xl">
-        <section className=" md:flex flex-col bg-gray-50 p-5 rounded-md h-fit mx-2">
-          <p className="font-semibold text-lg">
-            {user.name ?? 'Usuário'}
-          </p>
-          <p className="text-gray-500 mt-2">
-            {user.bio ?? 'Digite sua Biografia...'}
-          </p>
-        </section>
+      {/* Main Content */}
+      <main className="pt-16 md:pt-20 pb-16">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+          {/* User Info Header */}
+          <header className="text-center mb-12">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-900 mb-2 tracking-tight">
+              {user.name ?? "User"}
+            </h1>
+            <div className="w-12 h-px bg-gray-300 mx-auto" />
+          </header>
 
-        <section
-          className="bg-gray-50 rounded-md p-5 h-fit mx-2"
-        >
-          <h3 className="font-semibold text-lg">
-            {user.name ? `Apoiar ${user.name}` : 'Apoiar Usuário'}	
-          </h3>
-          <FormData slug={user.username!} creatorId={user.conectStipeAccountId ?? ""}/>
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* About Section */}
+            <section className="space-y-6">
+              <div className="border border-gray-200 rounded-none bg-white">
+                <div className="p-6 md:p-8">
+                  <div className="flex items-center mb-4">
+                    <h2 className="text-lg font-medium text-gray-900 tracking-wide">SOBRE</h2>
+                    <div className="flex-1 h-px bg-gray-200 ml-4" />
+                  </div>
 
+                  <div className="space-y-4">
+                    <div className="border-l-2 border-gray-900 pl-4">
+                      <p className="text-sm font-medium text-gray-900 uppercase tracking-wider mb-1">
+                        {user.name ?? "User"}
+                      </p>
+                    </div>
 
-        </section>
-      </div>
+                    <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                      {user.bio ?? "No biography available."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats or Additional Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border border-gray-200 p-4 text-center">
+                  <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Perfil</div>
+                  <div className="text-sm font-medium text-gray-900">Ativo</div>
+                </div>
+                <div className="border border-gray-200 p-4 text-center">
+                  <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Estatus</div>
+                  <div className="text-sm font-medium text-gray-900">Disponível</div>
+                </div>
+              </div>
+            </section>
+
+            {/* Support Section */}
+            <section className="space-y-6">
+              <div className="border border-gray-200 rounded-none bg-white">
+                <div className="p-6 md:p-8">
+                  <div className="flex items-center mb-6">
+                    <h2 className="text-lg font-medium text-gray-900 tracking-wide">SUPORTE</h2>
+                    <div className="flex-1 h-px bg-gray-200 ml-4" />
+                  </div>
+
+                  <div className="border-l-2 border-gray-900 pl-4 mb-6">
+                    <p className="text-sm font-medium text-gray-900 uppercase tracking-wider">
+                      {user.name ? `Apoie ${user.name}` : "Apoie o Criador"}
+                    </p>
+                  </div>
+
+                  <FormData slug={user.username!} creatorId={user.conectStipeAccountId ?? ""} />
+                </div>
+              </div>
+
+              {/* Additional Support Info */}
+              <div className="border border-gray-200 p-6">
+                <div className="text-center space-y-3">
+                  <div className="w-8 h-px bg-gray-300 mx-auto" />
+                  <p className="text-xs uppercase tracking-wider text-gray-500">Secure Payment</p>
+                  <p className="text-xs text-gray-400">All transactions are encrypted and secure</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-4">
+              <div className="w-6 h-px bg-gray-300" />
+              <p className="text-xs uppercase tracking-wider text-gray-500">Prestigify Creators</p>
+              <div className="w-6 h-px bg-gray-300" />
+            </div>
+
+            <div className="text-center md:text-right">
+              <p className="text-xs text-gray-400">© {new Date().getFullYear()} All rights reserved.</p>
+              <p className="text-xs text-gray-400 mt-1">Designed with precision and care.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
