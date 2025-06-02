@@ -103,13 +103,7 @@ export async function createPayment(data: CreatePaymentSchema) {
         console.error('Erro detalhado:', error)
         
         // Tratamento específico para erros do Stripe
-        if (error.type === 'StripeInvalidRequestError') {
-            if (error.code === 'insufficient_capabilities_for_transfer') {
-                return {
-                    error: 'A conta do criador precisa completar a verificação no Stripe antes de receber doações.'
-                }
-            }
-        }
+        
         
         return {
             error: 'Erro ao criar o pagamento. Tente novamente.'
